@@ -1,3 +1,4 @@
+using CalendarCreator.Annotations;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using CalendarCreator.Annotations;
+using System.Xml.Serialization;
 
 namespace CalendarCreator
 {
@@ -15,8 +16,12 @@ namespace CalendarCreator
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private CalendarEntry _selection;
+        #region Fields
+
         private ObservableCollection<CalendarEntry> _events;
+        private CalendarEntry _selection;
+
+        #endregion Fields
 
         #region Properties
 
@@ -42,7 +47,7 @@ namespace CalendarCreator
             }
         }
 
-        #endregion
+        #endregion Properties
 
         #region SaveCommand
 
@@ -50,9 +55,29 @@ namespace CalendarCreator
 
         private void SaveCommand_Execute(object parameter)
         {
+            // Configure save file dialog box
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.FileName = "Calendar"; // Default file name
+            dlg.DefaultExt = ".cal"; // Default file extension
+            dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
+
+            // Show save file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                // Save document
+                string filename = dlg.FileName;
+                XmlSerializer serializer = new XmlSerializer(_events.GetType());
+                using (Stream stream = new FileStream(filename, FileMode.OpenOrCreate))
+                {
+                    serializer.Serialize(stream, _events);
+                }
+            }
         }
 
-        #endregion
+        #endregion SaveCommand
 
         #region OpenCommand
 
@@ -60,18 +85,36 @@ namespace CalendarCreator
 
         private void OpenCommand_Execute(object parameter)
         {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = "Calendar"; // Default file name
+            dlg.DefaultExt = ".cal"; // Default file extension
+            dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process save file dialog box results
+            if (result == true)
+            {
+                Events.Clear();
+                // open document
+                string filename = dlg.FileName;
+                XmlSerializer serializer = new XmlSerializer(_events.GetType());
+                using (Stream stream = new FileStream(filename, FileMode.OpenOrCreate))
+                {
+                    Events = (ObservableCollection<CalendarEntry>)serializer.Deserialize(stream);
+                }
+            }
         }
 
-        #endregion
+        #endregion OpenCommand
 
         #region ExportCommand
 
         public ICommand ExportCommand { get; set; }
 
         private void ExportCommand_Execute(object parameter)
-        
         {
-			// Configure save file dialog box
+            // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.FileName = "Calendar"; // Default file name
             dlg.DefaultExt = ".ics"; // Default file extension
@@ -87,12 +130,11 @@ namespace CalendarCreator
                 string filename = dlg.FileName;
 
                 string content = Helper.GenerateICalendar(Events);
-                File.WriteAllText(filename,content);
+                File.WriteAllText(filename, content);
             }
-           
         }
 
-        #endregion
+        #endregion ExportCommand
 
         #region AddRowCommand
 
@@ -119,7 +161,7 @@ namespace CalendarCreator
             UpdateProperties();
         }
 
-        #endregion
+        #endregion AddRowCommand
 
         #region DeleteRowCommand
 
@@ -137,7 +179,7 @@ namespace CalendarCreator
             UpdateProperties();
         }
 
-        #endregion
+        #endregion DeleteRowCommand
 
         #region Constructor
 
@@ -153,7 +195,7 @@ namespace CalendarCreator
             DataContext = this;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Methods
 
@@ -163,10 +205,10 @@ namespace CalendarCreator
             OnPropertyChanged("Events");
         }
 
-        #endregion
+        #endregion Methods
 
-		#region PropertyChanged-Member
-		
+        #region PropertyChanged-Member
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -175,7 +217,7 @@ namespace CalendarCreator
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
-		
-		#endregion
+
+        #endregion PropertyChanged-Member
     }
 }
