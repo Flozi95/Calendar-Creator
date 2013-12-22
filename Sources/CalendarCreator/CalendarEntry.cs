@@ -9,14 +9,48 @@ namespace CalendarCreator
 {
     public class CalendarEntry
     {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        private DateTime _startDate;
+        private DateTime _endDate;
+
+        public DateTime StartDate
+        {
+            get { return _startDate; }
+            set
+            {
+                DateTime @old = _startDate;
+                DateTime @new = value;
+                if (@old.Day != @new.Day || @old.Month != @new.Month || @old.Year != @new.Year)
+                {
+                    value = new DateTime(@new.Year, @new.Month, @new.Day, @old.Hour, @old.Minute, @old.Second);
+                }
+                _startDate = value;
+            }
+        }
+
+        public DateTime EndDate
+        {
+            get { return _endDate; }
+            set
+            {
+                DateTime @old = _endDate;
+                DateTime @new = value;
+                if (@old.Day != @new.Day || @old.Month != @new.Month || @old.Year != @new.Year)
+                {
+                    value = new DateTime(@new.Year, @new.Month, @new.Day, @old.Hour, @old.Minute, @old.Second);
+                }
+                _endDate = value;
+            }
+        }
+
         public EntryType EventType { get; set; }
         public string Description { get; set; }
         public EntryForm EventForm { get; set; }
         public DateTime CreateTime { get; set; }
 
-        public CalendarEntry() {
+        public CalendarEntry()
+        {
+            _endDate = DateTime.Now;
+            _startDate = DateTime.Now;
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
             CreateTime = DateTime.Now;
