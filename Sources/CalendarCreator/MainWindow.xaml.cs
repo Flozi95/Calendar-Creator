@@ -1,7 +1,21 @@
-using System.Windows.Controls;
-using CalendarCreator.Annotations;
+// This file is part of CalendarCreator.
+// 
+// CalendarCreator is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// CalendarCreator is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with AlarmWorkflow.  If not, see <http://www.gnu.org/licenses/>.
+
+#region
+
 using System;
-using System.Diagnostics;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -10,19 +24,23 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
+using CalendarCreator.Annotations;
+using Microsoft.Win32;
+
+#endregion
 
 namespace CalendarCreator
 {
     /// <summary>
-    ///     Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         #region Fields
 
         private ObservableCollection<CalendarEntry> _events;
-        private CalendarEntry _selection;
         private string _fileName;
+        private CalendarEntry _selection;
 
         #endregion Fields
 
@@ -59,7 +77,7 @@ namespace CalendarCreator
         private void SaveCommand_Execute(object parameter)
         {
             // Configure save file dialog box
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            SaveFileDialog dlg = new SaveFileDialog();
             if (string.IsNullOrWhiteSpace(_fileName))
             {
                 dlg.FileName = "Calendar"; // Default file name
@@ -72,7 +90,7 @@ namespace CalendarCreator
             dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
 
             // Show save file dialog box
-            Nullable<bool> result = dlg.ShowDialog();
+            bool? result = dlg.ShowDialog();
 
             // Process save file dialog box results
             if (result == true)
@@ -96,7 +114,7 @@ namespace CalendarCreator
 
         private void OpenCommand_Execute(object parameter)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            OpenFileDialog dlg = new OpenFileDialog();
             if (string.IsNullOrWhiteSpace(_fileName))
             {
                 dlg.FileName = "Calendar"; // Default file name
@@ -104,24 +122,24 @@ namespace CalendarCreator
             else
             {
                 dlg.FileName = _fileName;
-            } 
+            }
             dlg.DefaultExt = ".cal"; // Default file extension
             dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
             // Show open file dialog box
-            Nullable<bool> result = dlg.ShowDialog();
+            bool? result = dlg.ShowDialog();
 
             // Process save file dialog box results
             if (result == true)
             {
                 _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
-                
+
                 Events.Clear();
                 // open document
                 string filename = dlg.FileName;
                 XmlSerializer serializer = new XmlSerializer(_events.GetType());
                 using (Stream stream = new FileStream(filename, FileMode.OpenOrCreate))
                 {
-                    Events = (ObservableCollection<CalendarEntry>)serializer.Deserialize(stream);
+                    Events = (ObservableCollection<CalendarEntry>) serializer.Deserialize(stream);
                 }
             }
         }
@@ -136,7 +154,6 @@ namespace CalendarCreator
         {
             Events = new ObservableCollection<CalendarEntry>();
             _fileName = String.Empty;
-
         }
 
         #endregion NewCommand
@@ -148,7 +165,7 @@ namespace CalendarCreator
         private void ExportCommand_Execute(object parameter)
         {
             // Configure save file dialog box
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            SaveFileDialog dlg = new SaveFileDialog();
             if (string.IsNullOrWhiteSpace(_fileName))
             {
                 dlg.FileName = "Calendar"; // Default file name
@@ -156,18 +173,18 @@ namespace CalendarCreator
             else
             {
                 dlg.FileName = _fileName;
-            } 
+            }
             dlg.DefaultExt = ".ics"; // Default file extension
             dlg.Filter = "iCalendar (.ics)|*.ics"; // Filter files by extension
 
             // Show save file dialog box
-            Nullable<bool> result = dlg.ShowDialog();
+            bool? result = dlg.ShowDialog();
 
             // Process save file dialog box results
             if (result == true)
             {
                 _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
-               
+
                 // Save document
                 string filename = dlg.FileName;
 

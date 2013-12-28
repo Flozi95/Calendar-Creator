@@ -1,12 +1,31 @@
-﻿using System;
+﻿// This file is part of CalendarCreator.
+// 
+// CalendarCreator is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// CalendarCreator is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with AlarmWorkflow.  If not, see <http://www.gnu.org/licenses/>.
+
+#region
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text;
 
+#endregion
+
 namespace CalendarCreator
 {
-    class Helper
+    internal class Helper
     {
         public static string GenerateICalendar(IEnumerable<CalendarEntry> events)
         {
@@ -15,7 +34,7 @@ namespace CalendarCreator
             builder.AppendLine("VERSION:2.0");
             builder.AppendLine("PRODID:Calendar-Creator");
             builder.AppendLine("METHOD:PUBLISH");
-            foreach (var calendarEntry in events)
+            foreach (CalendarEntry calendarEntry in events)
             {
                 builder.AppendLine("BEGIN:VEVENT");
                 builder.AppendLine(string.Format("UID:{0}", Guid.NewGuid()));
@@ -59,10 +78,10 @@ namespace CalendarCreator
             MemberInfo[] memInfo = type.GetMember(en.ToString());
             if (memInfo != null && memInfo.Length > 0)
             {
-                object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+                object[] attrs = memInfo[0].GetCustomAttributes(typeof (DescriptionAttribute), false);
                 if (attrs != null && attrs.Length > 0)
                 {
-                    return ((DescriptionAttribute)attrs[0]).Description;
+                    return ((DescriptionAttribute) attrs[0]).Description;
                 }
             }
             return en.ToString();
@@ -74,22 +93,21 @@ namespace CalendarCreator
             MemberInfo[] memInfo = type.GetMember(en.ToString());
             if (memInfo != null && memInfo.Length > 0)
             {
-                object[] attrs = memInfo[0].GetCustomAttributes(typeof(ShortDescriptionAttribute), false);
+                object[] attrs = memInfo[0].GetCustomAttributes(typeof (ShortDescriptionAttribute), false);
                 if (attrs != null && attrs.Length > 0)
                 {
-                    return ((ShortDescriptionAttribute)attrs[0]).ShortDescription;
+                    return ((ShortDescriptionAttribute) attrs[0]).ShortDescription;
                 }
             }
             return en.ToString();
         }
-
     }
 
-    public class ShortDescriptionAttribute : System.Attribute
+    public class ShortDescriptionAttribute : Attribute
     {
-        public ShortDescriptionAttribute(string shortDescription) 
+        public ShortDescriptionAttribute(string shortDescription)
         {
-            this.ShortDescription = shortDescription;
+            ShortDescription = shortDescription;
         }
 
         public string ShortDescription { get; set; }

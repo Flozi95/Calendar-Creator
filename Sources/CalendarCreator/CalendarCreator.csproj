@@ -107,14 +107,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Calendar.ico" />
-    <Resource Include="Images\Add.png" />
-    <Resource Include="Images\Delete.png" />
     <Resource Include="Images\Save.png" />
     <Resource Include="Images\Open.png" />
     <Resource Include="Images\Export.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\New.png" />
+    <Resource Include="Images\Add.png" />
+    <Resource Include="Images\Delete.png" />
     <Content Include="Xceed.Wpf.Toolkit.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
