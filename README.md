@@ -1,15 +1,15 @@
-Calendar-Creator
+CalendarCreator
 ================
 
-A .Net Calendar-Creator for easy creating multiple events and exporting them into an iCalendar file.
+A .Net CalendarCreator for easy creating multiple events and exporting them into an iCalendar file.
 
 License
 =============
 
 This project is licensed under the GNU GENERAL PUBLIC LICENSE Version 3. See gpl-3.0.txt for further information.
 
-    Calendar-Creator
-    Copyright (C) 2013	Calendar-Creator-Team
+    CalendarCreator
+    Copyright (C) 2013	CalendarCreator-Team
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ Icons
 Third-party-components
 =============
 
-The Calendar-Creator-Program makes use of the following libraries:
+The CalendarCreator-Program makes use of the following libraries:
     
 	Extended WPF Toolkit™ Community Edition
 	http://wpftoolkit.codeplex.com/
