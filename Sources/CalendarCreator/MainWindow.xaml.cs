@@ -22,6 +22,7 @@ namespace CalendarCreator
 
         private ObservableCollection<CalendarEntry> _events;
         private CalendarEntry _selection;
+        private string _fileName;
 
         #endregion Fields
 
@@ -59,7 +60,14 @@ namespace CalendarCreator
         {
             // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.FileName = "Calendar"; // Default file name
+            if (string.IsNullOrWhiteSpace(_fileName))
+            {
+                dlg.FileName = "Calendar"; // Default file name
+            }
+            else
+            {
+                dlg.FileName = _fileName;
+            }
             dlg.DefaultExt = ".cal"; // Default file extension
             dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
 
@@ -69,10 +77,11 @@ namespace CalendarCreator
             // Process save file dialog box results
             if (result == true)
             {
+                _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
                 // Save document
                 string filename = dlg.FileName;
                 XmlSerializer serializer = new XmlSerializer(_events.GetType());
-                using (Stream stream = new FileStream(filename, FileMode.OpenOrCreate))
+                using (Stream stream = new FileStream(filename, FileMode.Create))
                 {
                     serializer.Serialize(stream, _events);
                 }
@@ -88,7 +97,14 @@ namespace CalendarCreator
         private void OpenCommand_Execute(object parameter)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = "Calendar"; // Default file name
+            if (string.IsNullOrWhiteSpace(_fileName))
+            {
+                dlg.FileName = "Calendar"; // Default file name
+            }
+            else
+            {
+                dlg.FileName = _fileName;
+            } 
             dlg.DefaultExt = ".cal"; // Default file extension
             dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
             // Show open file dialog box
@@ -97,6 +113,8 @@ namespace CalendarCreator
             // Process save file dialog box results
             if (result == true)
             {
+                _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
+                
                 Events.Clear();
                 // open document
                 string filename = dlg.FileName;
@@ -110,6 +128,19 @@ namespace CalendarCreator
 
         #endregion OpenCommand
 
+        #region NewCommand
+
+        public ICommand NewCommand { get; set; }
+
+        private void NewCommand_Execute(object parameter)
+        {
+            Events = new ObservableCollection<CalendarEntry>();
+            _fileName = String.Empty;
+
+        }
+
+        #endregion NewCommand
+
         #region ExportCommand
 
         public ICommand ExportCommand { get; set; }
@@ -118,7 +149,14 @@ namespace CalendarCreator
         {
             // Configure save file dialog box
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.FileName = "Calendar"; // Default file name
+            if (string.IsNullOrWhiteSpace(_fileName))
+            {
+                dlg.FileName = "Calendar"; // Default file name
+            }
+            else
+            {
+                dlg.FileName = _fileName;
+            } 
             dlg.DefaultExt = ".ics"; // Default file extension
             dlg.Filter = "iCalendar (.ics)|*.ics"; // Filter files by extension
 
@@ -128,6 +166,8 @@ namespace CalendarCreator
             // Process save file dialog box results
             if (result == true)
             {
+                _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
+               
                 // Save document
                 string filename = dlg.FileName;
 
@@ -193,6 +233,7 @@ namespace CalendarCreator
             ExportCommand = new RelayCommand(ExportCommand_Execute);
             OpenCommand = new RelayCommand(OpenCommand_Execute);
             SaveCommand = new RelayCommand(SaveCommand_Execute);
+            NewCommand = new RelayCommand(NewCommand_Execute);
             Events = new ObservableCollection<CalendarEntry>();
             DataContext = this;
         }

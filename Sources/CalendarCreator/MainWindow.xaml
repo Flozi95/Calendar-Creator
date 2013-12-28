@@ -2,14 +2,22 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:CalendarCreator"
-        xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="CalendarCreator.MainWindow"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    mc:Ignorable="d" x:Class="CalendarCreator.MainWindow"
         Title="Kalender - Creator" Height="500" Width="700" Icon="Images/Calendar.ico">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*" MinWidth="200px" />
-            <ColumnDefinition Width="15*" />
+            <ColumnDefinition Width="117*" MinWidth="200px" />
+            <ColumnDefinition Width="56*" />
         </Grid.ColumnDefinitions>
-        <ToolBar VerticalAlignment="Top" Grid.ColumnSpan="2">
+        <ToolBar VerticalAlignment="Top" Grid.ColumnSpan="2" Height="27">
+            <Button Command="{Binding NewCommand}" ToolTip="Neue Datei erstellen">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/New.png" Width="16" Height="16" Margin="0,0,2,0" />
+                    <TextBlock Margin="2,0" Text="Neue Datei" FontWeight="Bold" />
+                </StackPanel>
+            </Button>
             <Button Command="{Binding SaveCommand}" ToolTip="Speichern der Einträge">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Save.png" Width="16" Height="16" Margin="0,0,2,0" />
@@ -30,7 +38,8 @@
                 </StackPanel>
             </Button>
         </ToolBar>
-        <DataGrid Grid.Column="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" IsReadOnly="True"
+        
+        <DataGrid Grid.Column="0" HorizontalScrollBarVisibility="Hidden" IsReadOnly="True"
 			ItemsSource="{Binding Events}" SelectedItem="{Binding Selection, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" CanUserDeleteRows="False"
 			CanUserAddRows="False" Margin="10,31,10,10" AutoGenerateColumns="False">
             <DataGrid.Columns>
@@ -62,36 +71,28 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <Label Content="Start" HorizontalAlignment="Left" Margin="11,31,0,0" VerticalAlignment="Top" Grid.Column="1" />
-        <DatePicker Margin="11,62,9,0" VerticalAlignment="Top" Grid.Column="1"
-			SelectedDate="{Binding Selection.StartDate, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" TabIndex="4" />
-        <TextBox Height="23" Margin="11,91,9,0" TextWrapping="Wrap"
-			Text="{Binding Selection.StartDate, StringFormat=HH:mm}" VerticalAlignment="Top" Grid.Column="1"
-			TabIndex="5" />
-        <Label Content="Ende" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Grid.Column="1" />
-        <DatePicker Margin="10,150,10,0" VerticalAlignment="Top" Grid.Column="1"
-			SelectedDate="{Binding Selection.EndDate, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" TabIndex="6" />
-        <TextBox Height="23" Margin="10,179,10,0" TextWrapping="Wrap"
-			Text="{Binding Selection.EndDate, StringFormat=HH:mm}" VerticalAlignment="Top" Grid.Column="1"
-			TabIndex="7" />
-        <Label Content="Art" Grid.Column="1" HorizontalAlignment="Left" Margin="10,207,0,0" VerticalAlignment="Top" />
-        <ComboBox Grid.Column="1" Margin="10,238,10,0" VerticalAlignment="Top" Height="26" TabIndex="8"
+        <Label Content="Start" HorizontalAlignment="Left" Margin="11,31,0,0" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="35" />
+        <xctk:DateTimeUpDown Grid.Column="1"  Margin="10,62,10,0" Value="{Binding Selection.StartDate}" Format="Custom" FormatString="dd.MM.yyyy HH:mm" VerticalAlignment="Top" />
+        <Label Content="Ende" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" Grid.Column="1" Height="26" Width="36" />
+        <xctk:DateTimeUpDown Grid.Column="1"  Margin="10,108,10,0" Value="{Binding Selection.EndDate}" Format="Custom" FormatString="dd.MM.yyyy HH:mm"  VerticalAlignment="Top" />
+        <Label Content="Art" Grid.Column="1" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Height="26" Width="26" />
+        <ComboBox Grid.Column="1" Margin="10,154,10,0" VerticalAlignment="Top" Height="26" TabIndex="8"
 			DisplayMemberPath="Description"
 			SelectedValue="{Binding Selection.EventType}"
 			SelectedValuePath="Value"
 			ItemsSource="{Binding Source={local:Enumeration {x:Type local:EntryType}}}" />
-        <Label Content="Beschreibung" Grid.Column="1" HorizontalAlignment="Left" Margin="10,269,0,0"
-			VerticalAlignment="Top" />
-        <TextBox Grid.Column="1" Height="23" Margin="10,300,10,0" TextWrapping="Wrap"
-			Text="{Binding Selection.Description, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" TabIndex="9" />
-        <Label Grid.Column="1" HorizontalAlignment="Left" Margin="11,328,0,0" VerticalAlignment="Top" />
+        <Label Content="Beschreibung" Grid.Column="1" HorizontalAlignment="Left" Margin="10,185,0,0"
+			VerticalAlignment="Top" Height="26" Width="82" />
+        <TextBox Grid.Column="1" Height="23" Margin="10,216,10,0" TextWrapping="Wrap"
+			Text="{Binding Selection.Description}" VerticalAlignment="Top" TabIndex="9" />
+        <Label Grid.Column="1" HorizontalAlignment="Left" Margin="10,293,0,0" VerticalAlignment="Top" Height="10" Width="10" />
         <ComboBox Grid.Column="1" VerticalAlignment="Top" Height="26" TabIndex="8"
 			DisplayMemberPath="Description"
-			SelectedValue="{Binding Selection.EventForm, NotifyOnTargetUpdated=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+			SelectedValue="{Binding Selection.EventForm}"
 			SelectedValuePath="Value"
-			Margin="0,0,392,0" >
-            <system:String>Typ</system:String>
-        </ComboBox>
+			Margin="10,244,11,0"
+            ItemsSource="{Binding Source={local:Enumeration {x:Type local:EntryForm}}}" />
         <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Margin="0,26,0,0" Width="5" />
+
     </Grid>
 </Window>

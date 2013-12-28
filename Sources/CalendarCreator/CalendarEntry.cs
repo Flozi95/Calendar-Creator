@@ -1,47 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CalendarCreator
 {
     public class CalendarEntry
     {
-        private DateTime _startDate;
-        private DateTime _endDate;
-
-        public DateTime StartDate
-        {
-            get { return _startDate; }
-            set
-            {
-                DateTime @old = _startDate;
-                DateTime @new = value;
-                if (@old.Day != @new.Day || @old.Month != @new.Month || @old.Year != @new.Year)
-                {
-                    value = new DateTime(@new.Year, @new.Month, @new.Day, @old.Hour, @old.Minute, @old.Second);
-                }
-                _startDate = value;
-            }
-        }
-
-        public DateTime EndDate
-        {
-            get { return _endDate; }
-            set
-            {
-                DateTime @old = _endDate;
-                DateTime @new = value;
-                if (@old.Day != @new.Day || @old.Month != @new.Month || @old.Year != @new.Year)
-                {
-                    value = new DateTime(@new.Year, @new.Month, @new.Day, @old.Hour, @old.Minute, @old.Second);
-                }
-                _endDate = value;
-            }
-        }
-
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public EntryType EventType { get; set; }
         public string Description { get; set; }
         public EntryForm EventForm { get; set; }
@@ -49,11 +14,13 @@ namespace CalendarCreator
 
         public CalendarEntry()
         {
-            _endDate = DateTime.Now;
-            _startDate = DateTime.Now;
+            EndDate = DateTime.Now;
+            StartDate = DateTime.Now;
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
             CreateTime = DateTime.Now;
+            EventForm = EntryForm.Practice;
+            EventType = EntryType.Training;
         }
     }
     public enum EntryType
@@ -65,16 +32,22 @@ namespace CalendarCreator
         [Description("Arbeitsdienst")]
         WorkService,
         [Description("Sonstige Veranstaltungen")]
-        SpecialEvent
+        SpecialEvent,
+        [Description("Stüberlabend")]
+        Community
     }
     public enum EntryForm
     {
+        [ShortDescription("P")]
         [Description("Praxis")]
         Practice,
+        [ShortDescription("T")]
         [Description("Theorie")]
         Theory,
+        [ShortDescription("T/P")]
         [Description("Theorie und Praxis")]
         PracticeTheory,
+        [ShortDescription("Sonstiges")]
         [Description("Sonstiges")]
         Other
     }
