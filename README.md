@@ -27,8 +27,10 @@ This project is licensed under the GNU GENERAL PUBLIC LICENSE Version 3. See gpl
 Icons
 =============
 
-    Some icons are taken from: http://www.iconarchive.com/show/flatastic-1-icons-by-custom-icon-design.html
-	Some icons are taken from: http://www.iconarchive.com/show/pretty-office-9-icons-by-custom-icon-design.html
+    Some icons are taken from: 
+    http://www.iconarchive.com/show/flatastic-1-icons-by-custom-icon-design.html
+    http://www.iconarchive.com/show/pretty-office-9-icons-by-custom-icon-design.html
+    http://www.iconarchive.com/show/pretty-office-7-icons-by-custom-icon-design.html
 	
 Third-party-components
 =============
