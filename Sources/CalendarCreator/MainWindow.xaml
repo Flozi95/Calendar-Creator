@@ -7,6 +7,11 @@
     xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     mc:Ignorable="d" x:Class="CalendarCreator.MainWindow"
     Title="Kalender - Creator" Height="500" Width="700" Icon="Images/Calendar.ico">
+    <Window.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding OpenCommand}"/>
+        <KeyBinding Key="N" Modifiers="Control" Command="{Binding NewCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="117*" MinWidth="200px" />
@@ -23,6 +28,12 @@
                 <StackPanel Orientation="Horizontal">
                     <Image Source="Images/Save.png" Width="16" Height="16" Margin="0,0,2,0" />
                     <TextBlock Margin="2,0" Text="Speichern" FontWeight="Bold" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding SaveAsCommand}" ToolTip="Speichern der Einträge">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Images/Save.png" Width="16" Height="16" Margin="0,0,2,0" />
+                    <TextBlock Margin="2,0" Text="Speichern unter"/>
                 </StackPanel>
             </Button>
             <Button Command="{Binding OpenCommand}" ToolTip="Öffnen der Einträge">
@@ -76,28 +87,28 @@
         </DataGrid>
         <Label Content="Start" HorizontalAlignment="Left" Margin="11,31,0,0" VerticalAlignment="Top" Grid.Column="1"
                Height="26" Width="35" />
-        <xctk:DateTimeUpDown Grid.Column="1" Margin="10,62,10,0" Value="{Binding Selection.StartDate}" Format="Custom"
+        <xctk:DateTimeUpDown TabIndex="1" Grid.Column="1" Margin="10,62,10,0" Value="{Binding Selection.StartDate, UpdateSourceTrigger=PropertyChanged}" Format="Custom"
                              FormatString="dd.MM.yyyy HH:mm" VerticalAlignment="Top" />
         <Label Content="Ende" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" Grid.Column="1"
                Height="26" Width="36" />
-        <xctk:DateTimeUpDown Grid.Column="1" Margin="10,108,10,0" Value="{Binding Selection.EndDate}" Format="Custom"
+        <xctk:DateTimeUpDown TabIndex="2" Grid.Column="1" Margin="10,108,10,0" Value="{Binding Selection.EndDate, UpdateSourceTrigger=PropertyChanged}" Format="Custom"
                              FormatString="dd.MM.yyyy HH:mm" VerticalAlignment="Top" />
         <Label Content="Art" Grid.Column="1" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top"
                Height="26" Width="26" />
-        <ComboBox Grid.Column="1" Margin="10,154,10,0" VerticalAlignment="Top" Height="26" TabIndex="8"
+        <ComboBox Grid.Column="1" Margin="10,154,10,0" VerticalAlignment="Top" Height="26" TabIndex="3"
                   DisplayMemberPath="Description"
-                  SelectedValue="{Binding Selection.EventType}"
+                  SelectedValue="{Binding Selection.EventType,UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Value"
                   ItemsSource="{Binding Source={local:Enumeration {x:Type local:EntryType}}}" />
         <Label Content="Beschreibung" Grid.Column="1" HorizontalAlignment="Left" Margin="10,185,0,0"
                VerticalAlignment="Top" Height="26" Width="82" />
         <TextBox Grid.Column="1" Height="23" Margin="10,216,10,0" TextWrapping="Wrap"
-                 Text="{Binding Selection.Description}" VerticalAlignment="Top" TabIndex="9" />
+                 Text="{Binding Selection.Description,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" TabIndex="4" />
         <Label Grid.Column="1" HorizontalAlignment="Left" Margin="10,293,0,0" VerticalAlignment="Top" Height="10"
                Width="10" />
-        <ComboBox Grid.Column="1" VerticalAlignment="Top" Height="26" TabIndex="8"
+        <ComboBox Grid.Column="1" VerticalAlignment="Top" Height="26" TabIndex="5"
                   DisplayMemberPath="Description"
-                  SelectedValue="{Binding Selection.EventForm}"
+                  SelectedValue="{Binding Selection.EventForm,UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Value"
                   Margin="10,244,11,0"
                   ItemsSource="{Binding Source={local:Enumeration {x:Type local:EntryForm}}}" />

@@ -76,6 +76,30 @@ namespace CalendarCreator
 
         private void SaveCommand_Execute(object parameter)
         {
+            if (string.IsNullOrWhiteSpace(_fileName))
+            {
+                SaveAsCommand.Execute(null);
+            }
+            else
+            {
+                XmlSerializer serializer = new XmlSerializer(_events.GetType());
+                using (Stream stream = new FileStream(_fileName, FileMode.OpenOrCreate))
+                {
+                    serializer.Serialize(stream, new ObservableCollection<CalendarEntry>(_events.OrderBy(x => x.StartDate)));
+                }
+                MessageBox.Show("Erfolgreich gespeichert!", "Erfolg", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            }
+        }
+
+        #endregion SaveCommand
+
+        #region SaveAsCommand
+
+        public ICommand SaveAsCommand { get; set; }
+
+        private void SaveAsCommand_Execute(object parameter)
+        {
             // Configure save file dialog box
             SaveFileDialog dlg = new SaveFileDialog();
             if (string.IsNullOrWhiteSpace(_fileName))
@@ -84,7 +108,7 @@ namespace CalendarCreator
             }
             else
             {
-                dlg.FileName = _fileName;
+                dlg.FileName = Path.GetFileNameWithoutExtension(_fileName);
             }
             dlg.DefaultExt = ".cal"; // Default file extension
             dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
@@ -95,18 +119,19 @@ namespace CalendarCreator
             // Process save file dialog box results
             if (result == true)
             {
-                _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
+                _fileName = dlg.FileName;
                 // Save document
                 string filename = dlg.FileName;
                 XmlSerializer serializer = new XmlSerializer(_events.GetType());
                 using (Stream stream = new FileStream(filename, FileMode.Create))
                 {
-                    serializer.Serialize(stream, _events);
+                    serializer.Serialize(stream, new ObservableCollection<CalendarEntry>(_events.OrderBy(x => x.StartDate)));
                 }
+                MessageBox.Show("Erfolgreich gespeichert!", "Erfolg", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
-        #endregion SaveCommand
+        #endregion SaveAsCommand
 
         #region OpenCommand
 
@@ -121,7 +146,7 @@ namespace CalendarCreator
             }
             else
             {
-                dlg.FileName = _fileName;
+                dlg.FileName = Path.GetFileNameWithoutExtension(_fileName);
             }
             dlg.DefaultExt = ".cal"; // Default file extension
             dlg.Filter = "Calendar-file (.cal)|*.cal"; // Filter files by extension
@@ -131,7 +156,7 @@ namespace CalendarCreator
             // Process save file dialog box results
             if (result == true)
             {
-                _fileName = Path.GetFileNameWithoutExtension(dlg.FileName);
+                _fileName = dlg.FileName;
 
                 Events.Clear();
                 // open document
@@ -139,7 +164,7 @@ namespace CalendarCreator
                 XmlSerializer serializer = new XmlSerializer(_events.GetType());
                 using (Stream stream = new FileStream(filename, FileMode.OpenOrCreate))
                 {
-                    Events = (ObservableCollection<CalendarEntry>) serializer.Deserialize(stream);
+                    Events = (ObservableCollection<CalendarEntry>)serializer.Deserialize(stream);
                 }
             }
         }
@@ -250,6 +275,7 @@ namespace CalendarCreator
             ExportCommand = new RelayCommand(ExportCommand_Execute);
             OpenCommand = new RelayCommand(OpenCommand_Execute);
             SaveCommand = new RelayCommand(SaveCommand_Execute);
+            SaveAsCommand = new RelayCommand(SaveAsCommand_Execute);
             NewCommand = new RelayCommand(NewCommand_Execute);
             Events = new ObservableCollection<CalendarEntry>();
             DataContext = this;
