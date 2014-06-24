@@ -21,8 +21,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Xml.Serialization;
 using CalendarCreator.Annotations;
 using Microsoft.Win32;
@@ -83,7 +85,7 @@ namespace CalendarCreator
             else
             {
                 XmlSerializer serializer = new XmlSerializer(_events.GetType());
-                using (Stream stream = new FileStream(_fileName, FileMode.OpenOrCreate))
+                using (Stream stream = new FileStream(_fileName, FileMode.Create))
                 {
                     serializer.Serialize(stream, new ObservableCollection<CalendarEntry>(_events.OrderBy(x => x.StartDate)));
                 }
@@ -197,7 +199,7 @@ namespace CalendarCreator
             }
             else
             {
-                dlg.FileName = _fileName;
+                dlg.FileName = Path.GetFileNameWithoutExtension(_fileName);
             }
             dlg.DefaultExt = ".ics"; // Default file extension
             dlg.Filter = "iCalendar (.ics)|*.ics"; // Filter files by extension
@@ -213,7 +215,7 @@ namespace CalendarCreator
                 // Save document
                 string filename = dlg.FileName;
 
-                string content = Helper.GenerateICalendar(Events);
+                string content = Helper.GenerateICalendar(Events.OrderBy(x=>x.StartDate));
                 File.WriteAllText(filename, content);
             }
         }
@@ -269,6 +271,7 @@ namespace CalendarCreator
 
         public MainWindow()
         {
+            this.Language = XmlLanguage.GetLanguage(Thread.CurrentThread.CurrentCulture.IetfLanguageTag);
             InitializeComponent();
             AddRowCommand = new RelayCommand(AddRowCommand_Execute);
             DeleteRowCommand = new RelayCommand(DeleteRowCommand_Execute, DeleteRowCommand_CanExecute);
