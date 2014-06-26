@@ -117,15 +117,15 @@ namespace CalendarCreator
 
     public enum EntryType
     {
-        [Description("Übung")]
+        [Description("FF-Übung")]
         Training,
-        [Description("Dienstsitzung")]
+        [Description("FF-Dienstsitzung")]
         Meeting,
-        [Description("Arbeitsdienst")]
+        [Description("FF-Arbeitsdienst")]
         WorkService,
         [Description("Sonstige Veranstaltungen")]
         SpecialEvent,
-        [Description("Stüberlabend")]
+        [Description("FF-Stüberlabend")]
         Community
     }
 

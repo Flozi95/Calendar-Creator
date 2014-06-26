@@ -60,7 +60,6 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Width="*" Header="Wochentag"
                                     Binding="{Binding StartDate, StringFormat=dddd}" />
-
                 <DataGridTextColumn Width="*" Header="Start"
                                     Binding="{Binding StartDate, StringFormat=dd.MM.yy HH:mm}" />
                 <DataGridTextColumn Width="*" Header="Ende" Binding="{Binding EndDate, StringFormat=dd.MM.yy HH:mm}" />

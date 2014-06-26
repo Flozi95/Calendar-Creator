@@ -34,6 +34,7 @@ namespace CalendarCreator
             builder.AppendLine("VERSION:2.0");
             builder.AppendLine("PRODID:Calendar-Creator");
             builder.AppendLine("METHOD:PUBLISH");
+            builder.AppendLine("X-LOTUS-CHARSET:UTF-8");
             foreach (CalendarEntry calendarEntry in events)
             {
                 builder.AppendLine("BEGIN:VEVENT");
@@ -44,7 +45,6 @@ namespace CalendarCreator
                 switch (calendarEntry.EventType)
                 {
                     case EntryType.Training:
-
                         builder.AppendLine(string.Format("SUMMARY:{0}: {1} ({2})",
                             GetDescription(calendarEntry.EventType),
                             calendarEntry.Description,
